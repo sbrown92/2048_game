@@ -1,46 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
- * File:   main.cpp
- * Author: Sam
+ * File:   Board.h
+ * Author: Sam Brown
  *
- * Created on October 6, 2016, 5:26 PM
+ * Created on October 6, 2016, 5:27 PM
  */
 
-#include <cstdlib>
-#include <iostream>
-#include <termios.h>
-#include <unistd.h>
-#include "Board.h"
+#ifndef BOARD_H
+#define BOARD_H
 
-using namespace std;
+#include<iostream>
 
-/*
- * 
- */
-int main(int argc, char** argv) {
-    Board board;
-    static struct termios oldT, newT;
-    int res = tcgetattr( STDIN_FILENO, &oldT);
-    char move = ' ';
+
+const int HEIGHT = 4;
+const int WIDTH = 4;
+class Board {
+public:
+    Board();
+    Board(const Board& orig);
+    virtual ~Board();
     
-    newT = oldT;
-    newT.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr( STDIN_FILENO, TCSANOW, &newT);
+    void MakeMove(char direction);
+    bool GameIsNotDone();
+    void PrintBoard();
     
     
-    cout << "Please enter your move: ";
-    while(move != '\n'){
-        move = getchar();
-        board.MakeMove(move);
-    }
+private:
+    int b[4][4];
+    bool gameWon, spacesLeft;
+    
+    bool ScoreIsReached();
+    bool SpacesLeft();
+    void CombineSimilarTiles(char direction);
+    void PlaceRandomTile();
+    
     
 
-    
-    return 0;
-}
+};
 
+#endif /* BOARD_H */
